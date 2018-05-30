@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
+           id="cordova-plugin-sumup"
+      version="1.0.0">
+    <name>Sumup</name>
+    <author>nuvoPoint</author>
+    <description>
+        Cordova plugin for integration with sumup sdk
+    </description>
+    <license>MIT</license>
+    <repo>https://github.com/nuvoPoint/cordova-plugin-sumup.git</repo>
+    <issue>https://github.com/nuvoPoint/cordova-plugin-sumup/issues</issue>
+    <keywords>
+      sumup, cordova, phonegap, cordova:ecosystem, phonegap:ecosystem
+    </keywords>
+
+    <js-module src="www/sumup.js" name="sumup">
+        <clobbers target="cordova-plugin-sumup" />
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <preference name="SUMUP_API_KEY" />
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="Sumup" >
+                <param name="android-package" value="com.nuvopoint.cordova.Sumup" />
+            </feature>
+        </config-file>
+        <config-file target="./res/values/strings.xml" parent="/resources">
+            <string name="SUMUP_API_KEY">$SUMUP_API_KEY</string>
+        </config-file>
+        <!--config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:name="com.ourcodeworld.plugins.onedrivefilepicker.DialogShowPicker" android:label="OneDrive filepicker">
+                <intent-filter>
+                    <action android:name="com.nuvopoint.cordova.Sumup" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
+            </activity>
+        </config-file-->
+
+        <source-file src="src/android/Sumup.java" target-dir="src/com/nuvopoint/cordova" />
+        <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
+    </platform>
+
+    <!-- ios -->
+    <!--platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Sumup">
+                <param name="ios-package" value="CDVSumup"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/CDVSumup.h" />
+        <source-file src="src/ios/CDVSumup.m" />
+    </platform-->
+</plugin>

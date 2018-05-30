@@ -1,0 +1,44 @@
+{
+    "name": "cordova-plugin-sumup",
+    "description": "Cordova plugin for integration with sumup sdk",
+    "author": "nuvoPoint",
+    "license": "MIT",
+    "version": "0.0.1",
+    "homepage": "https://github.com/nuvoPoint/cordova-plugin-sumup",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nuvoPoint/cordova-plugin-sumup.git"
+    },
+    "bugs": {
+        "url": "https://github.com/nuvoPoint/cordova-plugin-sumup.git/issues"
+    },
+    "cordova": {
+        "id": "cordova-plugin-sumup",
+        "platforms": [
+            "ios",
+            "android"
+        ]
+    },
+    "keywords": [
+        "ecosystem:cordova",
+        "ecosystem:phonegap",
+        "cordova",
+        "phonegap",
+        "sumup"
+    ],
+    "engines": {
+        "cordova": ">=6.0.0"
+    },
+    "author": "nuvoPoint",
+    "license": "MIT",
+    "scripts": {
+        "lint": "eslint **/*.js",
+        "cordova-paramedic": "cordova-paramedic",
+        "test:android": "cordova-paramedic --cleanUpAfterRun --verbose --platform android --plugin .",
+        "test:ios": "cordova-paramedic --cleanUpAfterRun --verbose --platform ios --plugin ."
+    },
+    "devDependencies": {
+        "cordova-paramedic": "git+https://github.com/apache/cordova-paramedic.git",
+        "eslint": "^3.18.0"
+    }
+}
