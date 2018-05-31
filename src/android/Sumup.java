@@ -107,8 +107,6 @@ public class Sumup extends CordovaPlugin {
                 }
             };
 
-            callback = callbackContext;
-            cordova.setActivityResultCallback(this);
             cordova.getActivity().runOnUiThread(runnable);
             return true;
         }
@@ -142,7 +140,8 @@ public class Sumup extends CordovaPlugin {
             Runnable runnable = new Runnable() {
                 public void run() {
 
-                    SumUpPayment payment = SumUpPayment.builder().total(amount).currency(currency).title(title).build();
+                    SumUpPayment payment = SumUpPayment.builder().total(amount).currency(currency).title(title)
+                            .skipSuccessScreen().build();
 
                     SumUpAPI.checkout(cordova.getActivity(), payment, REQUEST_CODE_PAYMENT);
                 }
