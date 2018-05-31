@@ -166,13 +166,13 @@ public class Sumup extends CordovaPlugin {
                 String message = extra.getString(SumUpAPI.Response.MESSAGE);
 
                 String[] res = new String[] { code, message };
+                PluginResult result = new PluginResult(PluginResult.Status.OK, res);
+                result.setKeepCallback(true);
+                callback.sendPluginResult(result);
+
             } catch (Exception e) {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
-
-            PluginResult result = new PluginResult(PluginResult.Status.OK, res);
-            result.setKeepCallback(true);
-            callback.sendPluginResult(result);
         }
 
         if (requestCode == REQUEST_CODE_PAYMENT) {
@@ -188,14 +188,13 @@ public class Sumup extends CordovaPlugin {
                 }
 
                 String[] res = new String[] { txcode, txinfo.getCard().getType() };
+                PluginResult result = new PluginResult(PluginResult.Status.OK, res);
+                result.setKeepCallback(true);
+                callback.sendPluginResult(result);
 
             } catch (Exception e) {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
-
-            PluginResult result = new PluginResult(PluginResult.Status.OK, res);
-            result.setKeepCallback(true);
-            callback.sendPluginResult(result);
         }
 
         if (requestCode == REQUEST_CODE_LOGIN_SETTING) {
@@ -209,14 +208,13 @@ public class Sumup extends CordovaPlugin {
                 String message = extra.getString(SumUpAPI.Response.MESSAGE);
 
                 String[] res = new String[] { code, message };
+                PluginResult result = new PluginResult(PluginResult.Status.OK, res);
+                result.setKeepCallback(true);
+                callback.sendPluginResult(result);
 
             } catch (Exception e) {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
-
-            PluginResult result = new PluginResult(PluginResult.Status.OK, res);
-            result.setKeepCallback(true);
-            callback.sendPluginResult(result);
         }
     }
 }
