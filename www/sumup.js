@@ -28,14 +28,12 @@ Sumup.prototype.settings = function (success, failure) {
     cordova.exec(success, failure, 'Sumup', 'settings', []);
 };
 
-/*
-Sumup.prototype.pay = function (success, failure, amount, currencycode, email, tel) {
-    cordova.exec(success, failure, 'Sumup', 'pay', [amount, currencycode, email, tel]);
+Sumup.prototype.prepare = function (success, failure) {
+    cordova.exec(success, failure, 'Sumup', 'prepare', []);
 };
-*/
 
-Sumup.prototype.pay = function (success, failure) {
-    cordova.exec(success, failure, 'Sumup', 'pay', []);
+Sumup.prototype.pay = function (success, failure, amount, currencycode, title) {
+    cordova.exec(success, failure, 'Sumup', 'pay', [amount, currencycode, title]);
 };
 
 if (typeof module != 'undefined' && module.exports) {

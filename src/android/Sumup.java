@@ -14,6 +14,7 @@ import com.sumup.merchant.api.SumUpState;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpLogin;
 import com.sumup.merchant.api.SumUpPayment;
+import com.sumup.merchant.Models.TransactionInfo;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -88,7 +89,21 @@ public class Sumup extends CordovaPlugin {
                 public void run() {
 
                     SumUpAPI.logout();
-                    callbackContext.success();
+                }
+            };
+
+            callback = callbackContext;
+            cordova.setActivityResultCallback(this);
+            cordova.getActivity().runOnUiThread(runnable);
+            return true;
+        }
+
+        if (action.equals("prepare")) {
+
+            Runnable runnable = new Runnable() {
+                public void run() {
+
+                    SumUpAPI.prepareForCheckout();
                 }
             };
 
@@ -100,21 +115,34 @@ public class Sumup extends CordovaPlugin {
 
         if (action.equals("pay")) {
 
+            BigDecimal amount;
+            try {
+                amount = new BigDecimal(args.get(0).toString());
+            } catch (Exception e) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Can't parse amount"));
+                return false;
+            }
+
+            SumUpPayment.Currency currency;
+            try {
+                currency = SumUpPayment.Currency.valueOf(args.get(1).toString());
+            } catch (Exception e) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Can't parse currency"));
+                return false;
+            }
+
+            String title;
+            try {
+                title = args.get(2).toString();
+            } catch (Exception e) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Can't parse title"));
+                return false;
+            }
+
             Runnable runnable = new Runnable() {
                 public void run() {
 
-                    SumUpPayment payment = SumUpPayment.builder()
-                            // mandatory parameters
-                            .total(new BigDecimal("8.00")) // minimum 1.00
-                            .currency(SumUpPayment.Currency.DKK)
-                            // optional: add details
-                            .title("Taxi Ride").receiptEmail("customer@mail.com").receiptSMS("+3531234567890")
-                            // optional: Add metadata
-                            .addAdditionalInfo("AccountId", "taxi0334").addAdditionalInfo("From", "Paris")
-                            .addAdditionalInfo("To", "Berlin")
-                            // optional: foreign transaction ID, must be unique!
-                            .foreignTransactionId(UUID.randomUUID().toString()) // can not exceed 128 chars
-                            .build();
+                    SumUpPayment payment = SumUpPayment.builder().total(amount).currency(currency).title(title).build();
 
                     SumUpAPI.checkout(cordova.getActivity(), payment, REQUEST_CODE_PAYMENT);
                 }
@@ -155,10 +183,12 @@ public class Sumup extends CordovaPlugin {
 
             String code = "";
             String txcode = "";
+            TransactionInfo txinfo = null;
             String message = "";
             if (extras != null) {
                 message = "" + extras.getString(SumUpAPI.Response.MESSAGE);
                 txcode = "" + extras.getString(SumUpAPI.Response.TX_CODE);
+                txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
                 code = "" + extras.getInt(SumUpAPI.Response.RESULT_CODE);
             }
 
@@ -167,6 +197,7 @@ public class Sumup extends CordovaPlugin {
                 res.put("code", code);
                 res.put("message", message);
                 res.put("txcode", txcode);
+                res.put("type", txinfo.getCard().getType());
             } catch (Exception e) {
             }
 
