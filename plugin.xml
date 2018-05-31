@@ -30,14 +30,6 @@
         <config-file target="./res/values/strings.xml" parent="/resources">
             <string name="SUMUP_API_KEY">$SUMUP_API_KEY</string>
         </config-file>
-        <!--config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <activity android:name="com.ourcodeworld.plugins.onedrivefilepicker.DialogShowPicker" android:label="OneDrive filepicker">
-                <intent-filter>
-                    <action android:name="com.nuvopoint.cordova.Sumup" />
-                    <category android:name="android.intent.category.DEFAULT" />
-                </intent-filter>
-            </activity>
-        </config-file-->
 
         <source-file src="src/android/Sumup.java" target-dir="src/com/nuvopoint/cordova" />
         <uses-permission android:name="android.permission.INTERNET" />
@@ -47,13 +39,40 @@
     </platform>
 
     <!-- ios -->
-    <!--platform name="ios">
+    <platform name="ios">
         <config-file target="config.xml" parent="/*">
             <feature name="Sumup">
                 <param name="ios-package" value="CDVSumup"/>
             </feature>
         </config-file>
+
+
+        <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+            <string>To provide a secure service, we need to know your location. Without location information, you cannot use SumUp.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSBluetoothPeripheralUsageDescription">
+            <string>The app needs to connect to Bluetooth peripherals to detect the SumUp Card Terminal correctly. Please confirm with OK as you cannot use your card reader otherwise.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSMicrophoneUsageDescription">
+            <string>The app needs to access the microphone of your audio jack in order for the SumUp Card Reader to be detected correctly. Please confirm with OK as you cannot use your card reader otherwise.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSLocationUsageDescription">
+            <string>To provide a secure service, we need to know your location. Without location information, you cannot use SumUp.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
+            <string>To be able to upload images, please allow the app access to your photo library.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="SUMUP_API_KEY">
+            <string>$SUMUP_API_KEY</string>
+        </config-file>
+        <framework src="src/ios/SumUpSDK.embeddedframework/SumUpSDK.framework" custom="true" />
+        <framework src="src/ios/SumUpSDK.embeddedframework/SumUpSDK.framework/Resources/SMPSharedResources.bundle" custom="true" />
+        <framework src="AVFoundation.framework" weak="true" />
+        <framework src="Accelerate.framework"  weak="true"/>
+        <framework src="MapKit.framework" weak="true" />
         <header-file src="src/ios/CDVSumup.h" />
         <source-file src="src/ios/CDVSumup.m" />
-    </platform-->
+        <resource-file src="src/ios/SumUpSDK.embeddedframework/SumUpSDK.framework/Resources/SMPSharedResources.bundle" />
+        <preference name="SUMUP_API_KEY" />
+    </platform>
 </plugin>
