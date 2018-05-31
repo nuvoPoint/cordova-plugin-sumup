@@ -160,15 +160,14 @@ public class Sumup extends CordovaPlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_CODE_LOGIN) {
-            Bundle extra = data.getExtras();
-            int code = extra.getInt(SumUpAPI.Response.RESULT_CODE);
-            String message = extra.getString(SumUpAPI.Response.MESSAGE);
-
-            JSONObject res = new JSONObject();
             try {
-                res.put("code", code);
-                res.put("message", message);
+                Bundle extra = data.getExtras();
+                int code = extra.getInt(SumUpAPI.Response.RESULT_CODE);
+                String message = extra.getString(SumUpAPI.Response.MESSAGE);
+
+                String[] res = new String[] { code, message };
             } catch (Exception e) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
 
             PluginResult result = new PluginResult(PluginResult.Status.OK, res);
@@ -178,26 +177,20 @@ public class Sumup extends CordovaPlugin {
 
         if (requestCode == REQUEST_CODE_PAYMENT) {
 
-            Bundle extras = data.getExtras();
-
-            String code = "";
-            String txcode = "";
-            TransactionInfo txinfo = null;
-            String message = "";
-            if (extras != null) {
-                message = "" + extras.getString(SumUpAPI.Response.MESSAGE);
-                txcode = "" + extras.getString(SumUpAPI.Response.TX_CODE);
-                txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
-                code = "" + extras.getInt(SumUpAPI.Response.RESULT_CODE);
-            }
-
-            JSONObject res = new JSONObject();
             try {
-                res.put("code", code);
-                res.put("message", message);
-                res.put("txcode", txcode);
-                res.put("type", txinfo.getCard().getType());
+                Bundle extras = data.getExtras();
+
+                String txcode = "";
+                TransactionInfo txinfo = null;
+                if (extras != null) {
+                    txcode = "" + extras.getString(SumUpAPI.Response.TX_CODE);
+                    txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
+                }
+
+                String[] res = new String[] { txcode, txinfo.getCard().getType() };
+
             } catch (Exception e) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
 
             PluginResult result = new PluginResult(PluginResult.Status.OK, res);
@@ -210,15 +203,15 @@ public class Sumup extends CordovaPlugin {
         }
 
         if (requestCode == REQUEST_CODE_PAYMENT_SETTINGS) {
-            Bundle extra = data.getExtras();
-            int code = extra.getInt(SumUpAPI.Response.RESULT_CODE);
-            String message = extra.getString(SumUpAPI.Response.MESSAGE);
-
-            JSONObject res = new JSONObject();
             try {
-                res.put("code", code);
-                res.put("message", message);
+                Bundle extra = data.getExtras();
+                int code = extra.getInt(SumUpAPI.Response.RESULT_CODE);
+                String message = extra.getString(SumUpAPI.Response.MESSAGE);
+
+                String[] res = new String[] { code, message };
+
             } catch (Exception e) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
 
             PluginResult result = new PluginResult(PluginResult.Status.OK, res);

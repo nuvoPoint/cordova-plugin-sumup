@@ -57,26 +57,37 @@
   [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+-(void) prepare:(CDVInvokedUrlCommand *)command {
+  [SMPSumUpSDK prepareForCheckout];
+}
+
 -(void) pay:(CDVInvokedUrlCommand *)command {
-    NSString* total = [command.arguments objectAtIndex:0];
-    NSString* title = [command.arguments objectAtIndex:1];
-    NSString* foreignTransactionID = [command.arguments objectAtIndex:2];
+    NSDecimal total = [(NSNumber*)[command.arguments objectAtIndex:0] decimalValue];
+    NSString* currency = [command.arguments objectAtIndex:1];
+    NSString* title = [command.arguments objectAtIndex:2];
 
     CDVPluginResult* pluginResult = nil;
-    SMPCheckoutRequest *request = [SMPCheckoutRequest requestWithTotal:[NSDecimalNumber decimalNumberWithString:total] title:title
-        currencyCode:[[SMPSumUpSDK currentMerchant] currencyCode]
+    SMPCheckoutRequest *request = [SMPCheckoutRequest requestWithTotal:[NSDecimalNumber decimalNumberWithDecimal:total] title:title
+        //currencyCode:[[SMPSumUpSDK currentMerchant] currencyCode]
+        currencyCode:currency
         paymentOptions:SMPPaymentOptionAny];
 
     [request setSkipScreenOptions:SMPSkipScreenOptionSuccess];
-    [request setForeignTransactionID:[NSString stringWithFormat:foreignTransactionID]];
+    //[request setForeignTransactionID:[NSString stringWithFormat:foreignTransactionID]];
 
     [SMPSumUpSDK checkoutWithRequest:request fromViewController:self.viewController completion:^(SMPCheckoutResult *result, NSError *error) {
         CDVPluginResult* pluginResult = nil;
 
         if (result.success) {
-          pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result.transactionCode];
+          for(NSString *key in [result.additionalInfo allKeys]) {
+            NSLog(@"%@ : %@", key, [result.additionalInfo objectForKey:key]);
+          }
+          NSDictionary *card = result.additionalInfo[@"card"];
+          NSArray *array = @[result.additionalInfo[@"transaction_code"], card[@"type"]];
+          pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:array];
         } else {
-          pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsInt:error.code];
+          NSLog(@"%@", [error localizedDescription]);
+          pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         }
 
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
