@@ -162,7 +162,7 @@ public class Sumup extends CordovaPlugin {
         if (requestCode == REQUEST_CODE_LOGIN) {
             try {
                 Bundle extra = data.getExtras();
-                int code = extra.getInt(SumUpAPI.Response.RESULT_CODE);
+                String code = "" + extra.getInt(SumUpAPI.Response.RESULT_CODE);
                 String message = extra.getString(SumUpAPI.Response.MESSAGE);
 
                 String[] res = new String[] { code, message };
@@ -180,10 +180,10 @@ public class Sumup extends CordovaPlugin {
             try {
                 Bundle extras = data.getExtras();
 
-                String txcode = "";
-                TransactionInfo txinfo = null;
+                String txcode;
+                TransactionInfo txinfo;
                 if (extras != null) {
-                    txcode = "" + extras.getString(SumUpAPI.Response.TX_CODE);
+                    txcode = extras.getString(SumUpAPI.Response.TX_CODE);
                     txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
                 }
 
@@ -205,7 +205,7 @@ public class Sumup extends CordovaPlugin {
         if (requestCode == REQUEST_CODE_PAYMENT_SETTINGS) {
             try {
                 Bundle extra = data.getExtras();
-                int code = extra.getInt(SumUpAPI.Response.RESULT_CODE);
+                String code = "" + extra.getInt(SumUpAPI.Response.RESULT_CODE);
                 String message = extra.getString(SumUpAPI.Response.MESSAGE);
 
                 String[] res = new String[] { code, message };
