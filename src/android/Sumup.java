@@ -29,7 +29,7 @@ public class Sumup extends CordovaPlugin {
     private static final int REQUEST_CODE_PAYMENT_SETTINGS = 3;
     private static final int REQUEST_CODE_LOGIN_SETTING = 4;
 
-    private CallbackContext callback = null;
+    // private CallbackContext callback = null;
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -55,8 +55,6 @@ public class Sumup extends CordovaPlugin {
             Runnable runnable = new Runnable() {
                 
                 public void run() {
-                    callback = callbackContext;
-                    cordova.setActivityResultCallback(this);
 
                     SumUpLogin sumUplogin = SumUpLogin.builder(affiliateKey).build();
                     SumUpAPI.openLoginActivity(cordova.getActivity(), sumUplogin, REQUEST_CODE_LOGIN);
@@ -72,8 +70,6 @@ public class Sumup extends CordovaPlugin {
 
             Runnable runnable = new Runnable() {
                 public void run() {
-                    callback = callbackContext;
-                    cordova.setActivityResultCallback(this);
 
                     SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_LOGIN_SETTING);
                     callbackContext.success();
@@ -88,8 +84,6 @@ public class Sumup extends CordovaPlugin {
 
             Runnable runnable = new Runnable() {
                 public void run() {
-                    callback = callbackContext;
-                    cordova.setActivityResultCallback(this);
 
                     SumUpAPI.logout();
                     callbackContext.success();
@@ -104,8 +98,6 @@ public class Sumup extends CordovaPlugin {
 
             Runnable runnable = new Runnable() {
                 public void run() {
-                    callback = callbackContext;
-                    cordova.setActivityResultCallback(this);
                     
                     SumUpPayment payment = SumUpPayment.builder()
                             // mandatory parameters
@@ -132,6 +124,7 @@ public class Sumup extends CordovaPlugin {
         return false;
     }
 
+    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -199,4 +192,5 @@ public class Sumup extends CordovaPlugin {
             callback.sendPluginResult(result);
         }
     }
+    */
 }
