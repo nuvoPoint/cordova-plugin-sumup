@@ -46,7 +46,6 @@
             </feature>
         </config-file>
 
-
         <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
             <string>To provide a secure service, we need to know your location. Without location information, you cannot use SumUp.</string>
         </config-file>
@@ -65,14 +64,9 @@
         <config-file target="*-Info.plist" parent="SUMUP_API_KEY">
             <string>$SUMUP_API_KEY</string>
         </config-file>
-        <framework src="src/ios/SumUpSDK.embeddedframework/SumUpSDK.framework" custom="true" />
-        <framework src="src/ios/SumUpSDK.embeddedframework/SumUpSDK.framework/Resources/SMPSharedResources.bundle" custom="true" />
-        <framework src="AVFoundation.framework" weak="true" />
-        <framework src="Accelerate.framework"  weak="true"/>
-        <framework src="MapKit.framework" weak="true" />
         <header-file src="src/ios/CDVSumup.h" />
         <source-file src="src/ios/CDVSumup.m" />
-        <resource-file src="src/ios/SumUpSDK.embeddedframework/SumUpSDK.framework/Resources/SMPSharedResources.bundle" />
         <preference name="SUMUP_API_KEY" />
+        <framework src="SumUpSDK" type="podspec" spec="~> 3.0.0" />
     </platform>
 </plugin>
