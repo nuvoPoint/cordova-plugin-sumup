@@ -30,6 +30,7 @@
     "engines": {
         "cordova": ">=6.0.0"
     },
+    "typings": "./www/sumup.d.ts",
     "scripts": {
         "lint": "eslint **/*.js",
         "cordova-paramedic": "cordova-paramedic",
