@@ -60,7 +60,7 @@ public class Sumup extends CordovaPlugin {
 
                     SumUpLogin sumUplogin = SumUpLogin.builder(affiliateKey).build();
                     SumUpAPI.openLoginActivity(cordova.getActivity(), sumUplogin, REQUEST_CODE_LOGIN);
-                    callbackContext.success();
+                    callbackContext.success(SumUpAPI.Response.MESSAGE);
                 }
             };
 
@@ -75,8 +75,7 @@ public class Sumup extends CordovaPlugin {
                     callback = callbackContext;
                     cordova.setActivityResultCallback(this);
 
-                    SumUpLogin sumUplogin = SumUpLogin.builder(affiliateKey).build();
-                    SumUpAPI.openLoginActivity(cordova.getActivity(), sumUplogin, REQUEST_CODE_LOGIN_SETTING);
+                    SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_LOGIN_SETTING);
                     callbackContext.success();
                 }
             };
@@ -122,7 +121,7 @@ public class Sumup extends CordovaPlugin {
                             .build();
 
                     SumUpAPI.checkout(cordova.getActivity(), payment, REQUEST_CODE_PAYMENT);
-                    callbackContext.success();
+                    callbackContext.success(SumUpAPI.Response.MESSAGE);
                 }
             };
 
