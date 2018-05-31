@@ -29,7 +29,7 @@ public class Sumup extends CordovaPlugin {
     private static final int REQUEST_CODE_PAYMENT_SETTINGS = 3;
     private static final int REQUEST_CODE_LOGIN_SETTING = 4;
 
-    // private CallbackContext callback = null;
+    private CallbackContext callback = null;
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -53,7 +53,7 @@ public class Sumup extends CordovaPlugin {
         if (action.equals("login")) {
 
             Runnable runnable = new Runnable() {
-                
+
                 public void run() {
 
                     SumUpLogin sumUplogin = SumUpLogin.builder(affiliateKey).build();
@@ -61,8 +61,9 @@ public class Sumup extends CordovaPlugin {
                 }
             };
 
+            callback = callbackContext;
+            cordova.setActivityResultCallback(this);
             cordova.getActivity().runOnUiThread(runnable);
-            callbackContext.success(SumUpAPI.Response);
             return true;
         }
 
@@ -72,10 +73,11 @@ public class Sumup extends CordovaPlugin {
                 public void run() {
 
                     SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_LOGIN_SETTING);
-                    callbackContext.success();
                 }
             };
 
+            callback = callbackContext;
+            cordova.setActivityResultCallback(this);
             cordova.getActivity().runOnUiThread(runnable);
             return true;
         }
@@ -90,6 +92,8 @@ public class Sumup extends CordovaPlugin {
                 }
             };
 
+            callback = callbackContext;
+            cordova.setActivityResultCallback(this);
             cordova.getActivity().runOnUiThread(runnable);
             return true;
         }
@@ -98,7 +102,7 @@ public class Sumup extends CordovaPlugin {
 
             Runnable runnable = new Runnable() {
                 public void run() {
-                    
+
                     SumUpPayment payment = SumUpPayment.builder()
                             // mandatory parameters
                             .total(new BigDecimal("8.00")) // minimum 1.00
@@ -116,15 +120,15 @@ public class Sumup extends CordovaPlugin {
                 }
             };
 
+            callback = callbackContext;
+            cordova.setActivityResultCallback(this);
             cordova.getActivity().runOnUiThread(runnable);
-            callbackContext.success(SumUpAPI.Response);
             return true;
         }
 
         return false;
     }
 
-    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -192,5 +196,4 @@ public class Sumup extends CordovaPlugin {
             callback.sendPluginResult(result);
         }
     }
-    */
 }
