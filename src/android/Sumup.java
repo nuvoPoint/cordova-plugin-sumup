@@ -1,6 +1,5 @@
 package com.nuvopoint.cordova;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,11 +16,9 @@ import com.sumup.merchant.api.SumUpPayment;
 import com.sumup.merchant.Models.TransactionInfo;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Sumup extends CordovaPlugin {
 
@@ -36,30 +33,18 @@ public class Sumup extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
 
-        Runnable runnable = new Runnable() {
-            public void run() {
-                SumUpState.init(cordova.getActivity());
-            }
-        };
-
-        cordova.getActivity().runOnUiThread(runnable);
+        cordova.getActivity().runOnUiThread(() -> SumUpState.init(cordova.getActivity()));
     }
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-
         String affiliateKey = this.cordova.getActivity().getString(cordova.getActivity().getResources()
                 .getIdentifier("SUMUP_API_KEY", "string", cordova.getActivity().getPackageName()));
 
         if (action.equals("login")) {
-
-            Runnable runnable = new Runnable() {
-
-                public void run() {
-
-                    SumUpLogin sumUplogin = SumUpLogin.builder(affiliateKey).build();
-                    SumUpAPI.openLoginActivity(cordova.getActivity(), sumUplogin, REQUEST_CODE_LOGIN);
-                }
+            Runnable runnable = () -> {
+                SumUpLogin sumUplogin = SumUpLogin.builder(affiliateKey).build();
+                SumUpAPI.openLoginActivity(cordova.getActivity(), sumUplogin, REQUEST_CODE_LOGIN);
             };
 
             callback = callbackContext;
@@ -69,45 +54,21 @@ public class Sumup extends CordovaPlugin {
         }
 
         if (action.equals("settings")) {
-
-            Runnable runnable = new Runnable() {
-                public void run() {
-
-                    SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_LOGIN_SETTING);
-                }
-            };
-
             callback = callbackContext;
             cordova.setActivityResultCallback(this);
-            cordova.getActivity().runOnUiThread(runnable);
+            cordova.getActivity().runOnUiThread(() -> SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_LOGIN_SETTING));
             return true;
         }
 
         if (action.equals("logout")) {
-
-            Runnable runnable = new Runnable() {
-                public void run() {
-
-                    SumUpAPI.logout();
-                }
-            };
-
             callback = callbackContext;
             cordova.setActivityResultCallback(this);
-            cordova.getActivity().runOnUiThread(runnable);
+            cordova.getActivity().runOnUiThread(SumUpAPI::logout);
             return true;
         }
 
         if (action.equals("prepare")) {
-
-            Runnable runnable = new Runnable() {
-                public void run() {
-
-                    SumUpAPI.prepareForCheckout();
-                }
-            };
-
-            cordova.getActivity().runOnUiThread(runnable);
+            cordova.getActivity().runOnUiThread(SumUpAPI::prepareForCheckout);
             return true;
         }
 
@@ -137,14 +98,15 @@ public class Sumup extends CordovaPlugin {
                 return false;
             }
 
-            Runnable runnable = new Runnable() {
-                public void run() {
+            Runnable runnable = () -> {
+                SumUpPayment payment = SumUpPayment.builder()
+                        .total(amount)
+                        .currency(currency)
+                        .title(title)
+                        .skipSuccessScreen()
+                        .build();
 
-                    SumUpPayment payment = SumUpPayment.builder().total(amount).currency(currency).title(title)
-                            .skipSuccessScreen().build();
-
-                    SumUpAPI.checkout(cordova.getActivity(), payment, REQUEST_CODE_PAYMENT);
-                }
+                SumUpAPI.checkout(cordova.getActivity(), payment, REQUEST_CODE_PAYMENT);
             };
 
             callback = callbackContext;
@@ -165,13 +127,13 @@ public class Sumup extends CordovaPlugin {
                 String code = "" + extra.getInt(SumUpAPI.Response.RESULT_CODE);
                 String message = extra.getString(SumUpAPI.Response.MESSAGE);
 
-                String[] res = new String[] { code, message };
+                JSONArray res = new JSONArray(new String[] { code, message });
                 PluginResult result = new PluginResult(PluginResult.Status.OK, res);
                 result.setKeepCallback(true);
                 callback.sendPluginResult(result);
 
             } catch (Exception e) {
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+                callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
         }
 
@@ -180,20 +142,21 @@ public class Sumup extends CordovaPlugin {
             try {
                 Bundle extras = data.getExtras();
 
-                String txcode;
-                TransactionInfo txinfo;
+                String txcode = "";
+                String txinfo = "";
                 if (extras != null) {
                     txcode = extras.getString(SumUpAPI.Response.TX_CODE);
-                    txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
+                    txinfo = ((TransactionInfo)extras.getParcelable(SumUpAPI.Response.TX_INFO)).getCard().getType();
                 }
 
-                String[] res = new String[] { txcode, txinfo.getCard().getType() };
+                JSONArray res = new JSONArray(new String[] { txcode, txinfo });
+
                 PluginResult result = new PluginResult(PluginResult.Status.OK, res);
                 result.setKeepCallback(true);
                 callback.sendPluginResult(result);
 
             } catch (Exception e) {
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+                callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
         }
 
@@ -207,13 +170,13 @@ public class Sumup extends CordovaPlugin {
                 String code = "" + extra.getInt(SumUpAPI.Response.RESULT_CODE);
                 String message = extra.getString(SumUpAPI.Response.MESSAGE);
 
-                String[] res = new String[] { code, message };
+                JSONArray res = new JSONArray(new String[] { code, message });
                 PluginResult result = new PluginResult(PluginResult.Status.OK, res);
                 result.setKeepCallback(true);
                 callback.sendPluginResult(result);
 
             } catch (Exception e) {
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+                callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
         }
     }
