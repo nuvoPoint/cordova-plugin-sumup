@@ -1,7 +1,10 @@
+export type Success = () => void;
+export type Failure = (err: Error) => void;
+
 declare module 'cordova-plugin-sumup' {
-  export function login(success, failure): void;
-  export function logout(success, failure): void;
-  export function settings(success, failure): void;
-  export function prepare(success, failure): void;
-  export function pay(success: ([transactionCode, cardType]: [string, string]) => void, failure, amount, currencycode, title): void;
+  export function login(accessToken?: string, success?: Success, failure?: Failure): void;
+  export function logout(success?: Success, failure?: Failure): void;
+  export function settings(success?: Success, failure?: Failure): void;
+  export function prepare(success?: Success, failure?: Failure): void;
+  export function pay(amount: number, currencycode: string, title: string, success?: ([transactionCode, cardType]: [string, string]) => void, failure?: Failure): void;
 }

@@ -1,8 +1,8 @@
 var exec = cordova.require('cordova/exec');
 
 module.exports = {
-    login: function (success, failure) {
-        cordova.exec(success, failure, 'Sumup', 'login', []);
+    login: function (accessToken, success, failure) {
+        cordova.exec(success, failure, 'Sumup', 'login', accessToken ? [accessToken] : []);
     },
     logout: function (success, failure) {
         cordova.exec(success, failure, 'Sumup', 'logout', []);
@@ -13,7 +13,7 @@ module.exports = {
     prepare: function (success, failure) {
         cordova.exec(success, failure, 'Sumup', 'prepare', []);
     },    
-    pay: function (success, failure, amount, currencycode, title) {
+    pay: function (amount, currencycode, title, success, failure) {
         cordova.exec(success, failure, 'Sumup', 'pay', [amount, currencycode, title]);
     },
 }

@@ -4,11 +4,23 @@
 @implementation CDVSumup
 
 -(void) login:(CDVInvokedUrlCommand *)command {
-    [[NSBundle mainBundle] infoDictionary];
-    NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
-    NSString* apikey = [infoDict objectForKey:@"SUMUP_API_KEY"];
-
-    [SMPSumUpSDK setupWithAPIKey:apikey];
+  [[NSBundle mainBundle] infoDictionary];
+  NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
+  NSString* apikey = [infoDict objectForKey:@"SUMUP_API_KEY"];
+  [SMPSumUpSDK setupWithAPIKey:apikey];
+  
+  if (command.arguments && [command.arguments count] > 0) {
+    NSString* accessToken = [command.arguments objectAtIndex:0];
+    [SMPSumUpSDK loginWithToken:accessToken completion:^(BOOL success, NSError *error) {
+      CDVPluginResult* pluginResult = nil;
+      if (success) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+      } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+      }
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+  } else {
     [SMPSumUpSDK presentLoginFromViewController:self.viewController
         animated:YES
         completionBlock:^(BOOL success, NSError *error) {
@@ -21,6 +33,7 @@
         }
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
+  }
 }
 
 -(void) logout:(CDVInvokedUrlCommand *)command {
@@ -33,6 +46,20 @@
       }
       [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
   }];
+}
+
+-(void) settings:(CDVInvokedUrlCommand *)command {
+  [SMPSumUpSDK presentCheckoutPreferencesFromViewController:self.viewController
+   animated:YES
+   completion:^(BOOL success, NSError * _Nullable error) {
+     CDVPluginResult* pluginResult = nil;
+     if (success) {
+       pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+     } else {
+       pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+     }
+     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+   }];
 }
 
 -(void) checkoutPreferences:(CDVInvokedUrlCommand *)command {
