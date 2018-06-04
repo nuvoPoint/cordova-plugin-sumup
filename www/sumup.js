@@ -1,4 +1,4 @@
-var exec = cordova.require('cordova/exec');
+var exec = require('cordova/exec');
 
 module.exports = {
     login: function (accessToken, success, failure) {
