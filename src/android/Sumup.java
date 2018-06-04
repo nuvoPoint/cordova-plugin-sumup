@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class Sumup extends CordovaPlugin {
+public class SumUp extends CordovaPlugin {
 
     private static final int REQUEST_CODE_LOGIN = 1;
     private static final int REQUEST_CODE_PAYMENT = 2;
