@@ -16,7 +16,7 @@
     </keywords>
 
     <js-module src="www/sumup.js" name="sumup">
-        <clobbers target="cordova-plugin-sumup" />
+        <clobbers target="cordova.plugins.sumup" />
     </js-module>
 
     <!-- android -->
