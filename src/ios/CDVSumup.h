@@ -1,6 +1,6 @@
 #import <Cordova/CDV.h>
 
-@interface CDVSumup : CDVPlugin
+@interface CDVSumUp : CDVPlugin
 
 -(void) login:(CDVInvokedUrlCommand*)command;
 -(void) logout:(CDVInvokedUrlCommand*)command;

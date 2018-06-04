@@ -1,7 +1,7 @@
-#import "CDVSumup.h"
+#import "CDVSumUp.h"
 #import <SumUpSDK/SumUpSDK.h>
 
-@implementation CDVSumup
+@implementation CDVSumUp
 
 -(void) login:(CDVInvokedUrlCommand *)command {
   [[NSBundle mainBundle] infoDictionary];
