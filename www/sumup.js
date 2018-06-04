@@ -1,19 +1,19 @@
 var exec = require('cordova/exec');
 
 module.exports = {
-    login: function (accessToken, success, failure) {
-        cordova.exec(success, failure, 'SumUp', 'login', accessToken ? [accessToken] : []);
+    login: function (accessToken) {
+        return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'login', accessToken ? [accessToken] : []));
     },
-    logout: function (success, failure) {
-        cordova.exec(success, failure, 'SumUp', 'logout', []);
+    logout: function () {
+        return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'logout', []));
     },
-    settings: function (success, failure) {
-        cordova.exec(success, failure, 'SumUp', 'settings', []);
+    settings: function () {
+        return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'settings', []));
     },
-    prepare: function (success, failure) {
-        cordova.exec(success, failure, 'SumUp', 'prepare', []);
-    },    
-    pay: function (amount, currencycode, title, success, failure) {
-        cordova.exec(success, failure, 'SumUp', 'pay', [amount, currencycode, title]);
+    prepare: function () {
+        return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'prepare', []));
+    },
+    pay: function (amount, currencycode, title) {
+        return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'pay', [amount, currencycode, title]));
     },
 }
