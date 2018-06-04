@@ -1,5 +1,5 @@
-export type Success = () => void;
-export type Failure = (err: Error) => void;
+declare type Success = () => void;
+declare type Failure = (err: Error) => void;
 
 declare module 'cordova-plugin-sumup' {
   export function login(accessToken?: string, success?: Success, failure?: Failure): void;
