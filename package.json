@@ -3,7 +3,8 @@
     "description": "Cordova plugin for integration with sumup sdk",
     "author": "nuvoPoint",
     "license": "MIT",
-    "version": "0.0.1",
+    "module": "./www/sumup.js",
+    "version": "1.0.0",
     "homepage": "https://github.com/nuvoPoint/cordova-plugin-sumup",
     "repository": {
         "type": "git",
@@ -29,8 +30,7 @@
     "engines": {
         "cordova": ">=6.0.0"
     },
-    "author": "nuvoPoint",
-    "license": "MIT",
+    "typings": "./www/sumup.d.ts",
     "scripts": {
         "lint": "eslint **/*.js",
         "cordova-paramedic": "cordova-paramedic",
