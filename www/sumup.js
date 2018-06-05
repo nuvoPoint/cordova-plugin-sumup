@@ -1,5 +1,3 @@
-var exec = require('cordova/exec');
-
 // iOS
 // SMPSumUpSDKErrorGeneral             = 0,        // General error
 // SMPSumUpSDKErrorActivationNeeded    = 1,        // The merchant's account is not activated
