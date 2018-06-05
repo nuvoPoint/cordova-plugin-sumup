@@ -9,6 +9,7 @@ import org.apache.cordova.PluginResult;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
 
+import com.google.gson.Gson;
 import com.sumup.merchant.api.SumUpState;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpLogin;
@@ -143,7 +144,6 @@ public class SumUp extends CordovaPlugin {
         JSONObject obj = new JSONObject();
         obj.put("code", code);
         obj.put("message", message);
-        obj.put("data", new Object(){});
 
         if (code == 1) {
           PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
@@ -167,16 +167,26 @@ public class SumUp extends CordovaPlugin {
         Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
         String message = extras.getString(SumUpAPI.Response.MESSAGE);
 
-        Object transInfo = new Object();
-        
-        if (!extras.isEmpty()) {
-          transInfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
-        }
-        
+
         JSONObject obj = new JSONObject();
         obj.put("code", code);
         obj.put("message", message);
-        obj.put("data", transInfo);
+
+        if (!extras.isEmpty()) {
+          TransactionInfo txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
+
+          obj.put("transaction_code", txinfo.getTransactionCode());
+          obj.put("merchant_code", txinfo.getMerchantCode());
+          obj.put("amount", txinfo.getAmount());
+          obj.put("tip_amount", txinfo.getTipAmount());
+          obj.put("vat_amount", txinfo.getVatAmount());
+          obj.put("currency", txinfo.getCurrency());
+          obj.put("status", txinfo.getStatus());
+          obj.put("payment_type", txinfo.getPaymentType());
+          obj.put("entry_mode", txinfo.getEntryMode());
+          obj.put("installments", txinfo.getInstallments());
+          obj.put("card_type", txinfo.getCard().getType());
+        }
 
         if (code == 1) {
           PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
@@ -207,7 +217,6 @@ public class SumUp extends CordovaPlugin {
         JSONObject obj = new JSONObject();
         obj.put("code", code);
         obj.put("message", message);
-        obj.put("data", new Object(){});
 
         if (code == 1) {
           PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
