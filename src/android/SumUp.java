@@ -150,7 +150,7 @@ public class SumUp extends CordovaPlugin {
 
     if (requestCode == REQUEST_CODE_LOGIN) {
       try {
-        if(data != null) {
+        if (data != null) {
           Bundle extras = data.getExtras();
           Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
           String message = extras.getString(SumUpAPI.Response.MESSAGE);
@@ -178,39 +178,40 @@ public class SumUp extends CordovaPlugin {
         }
 
       } catch (Exception e) {
-        JSONObject obj = new JSONObject();
-        obj.put("code", 0);
-        obj.put("message", e.getMessage());
-        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+        try {
+          JSONObject obj = new JSONObject();
+          obj.put("code", 0);
+          obj.put("message", e.getMessage());
+          callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+        } catch (Exception er) {
+          callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, er.getMessage()));
+        }
       }
     }
 
     if (requestCode == REQUEST_CODE_PAYMENT) {
 
       try {
-        if(data != null) {
+        if (data != null) {
           Bundle extras = data.getExtras();
           Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
           String message = extras.getString(SumUpAPI.Response.MESSAGE);
+          TransactionInfo txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
 
           JSONObject obj = new JSONObject();
 
-          if (!extras.isEmpty()) {
-            TransactionInfo txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
-
-            if (txinfo != null) {
-              obj.put("transaction_code", txinfo.getTransactionCode());
-              obj.put("merchant_code", txinfo.getMerchantCode());
-              obj.put("amount", txinfo.getAmount());
-              obj.put("tip_amount", txinfo.getTipAmount());
-              obj.put("vat_amount", txinfo.getVatAmount());
-              obj.put("currency", txinfo.getCurrency());
-              obj.put("status", txinfo.getStatus());
-              obj.put("payment_type", txinfo.getPaymentType());
-              obj.put("entry_mode", txinfo.getEntryMode());
-              obj.put("installments", txinfo.getInstallments());
-              obj.put("card_type", txinfo.getCard().getType());
-            }
+          if (txinfo != null) {
+            obj.put("transaction_code", txinfo.getTransactionCode());
+            obj.put("merchant_code", txinfo.getMerchantCode());
+            obj.put("amount", txinfo.getAmount());
+            obj.put("tip_amount", txinfo.getTipAmount());
+            obj.put("vat_amount", txinfo.getVatAmount());
+            obj.put("currency", txinfo.getCurrency());
+            obj.put("status", txinfo.getStatus());
+            obj.put("payment_type", txinfo.getPaymentType());
+            obj.put("entry_mode", txinfo.getEntryMode());
+            obj.put("installments", txinfo.getInstallments());
+            obj.put("card_type", txinfo.getCard().getType());
           }
 
           if (code == 1) {
@@ -236,17 +237,21 @@ public class SumUp extends CordovaPlugin {
         }
 
       } catch (Exception e) {
-        JSONObject obj = new JSONObject();
-        obj.put("code", 0);
-        obj.put("message", e.getMessage());
-        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+        try {
+          JSONObject obj = new JSONObject();
+          obj.put("code", 0);
+          obj.put("message", e.getMessage());
+          callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+        } catch (Exception er) {
+          callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, er.getMessage()));
+        }
       }
     }
 
     if (requestCode == REQUEST_CODE_PAYMENT_SETTINGS) {
       try {
 
-        if(data != null) {
+        if (data != null) {
           Bundle extras = data.getExtras();
           Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
           String message = extras.getString(SumUpAPI.Response.MESSAGE);
@@ -275,10 +280,14 @@ public class SumUp extends CordovaPlugin {
         }
 
       } catch (Exception e) {
-        JSONObject obj = new JSONObject();
-        obj.put("code", 0);
-        obj.put("message", e.getMessage());
-        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+        try {
+          JSONObject obj = new JSONObject();
+          obj.put("code", 0);
+          obj.put("message", e.getMessage());
+          callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+        } catch (Exception er) {
+          callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, er.getMessage()));
+        }
       }
     }
   }
