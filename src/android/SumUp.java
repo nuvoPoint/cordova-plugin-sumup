@@ -227,11 +227,7 @@ public class SumUp extends CordovaPlugin {
             callback.sendPluginResult(result);
           }
         } else {
-          JSONObject obj = new JSONObject();
-          obj.put("code", 0);
-          obj.put("message", "Transaction canceled");
-
-          PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
+          PluginResult result = new PluginResult(PluginResult.Status.OK);
           result.setKeepCallback(true);
           callback.sendPluginResult(result);
         }
