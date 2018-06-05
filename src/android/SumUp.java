@@ -61,6 +61,7 @@ public class SumUp extends CordovaPlugin {
       callback = callbackContext;
       cordova.setActivityResultCallback(this);
       cordova.getActivity().runOnUiThread(runnable);
+
       return true;
     }
 
@@ -68,30 +69,34 @@ public class SumUp extends CordovaPlugin {
       callback = callbackContext;
       cordova.setActivityResultCallback(this);
       cordova.getActivity().runOnUiThread(() -> SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_PAYMENT_SETTINGS));
+
       return true;
     }
 
     if (action.equals("logout")) {
-
       callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
       cordova.getActivity().runOnUiThread(SumUpAPI::logout);
+
       return true;
     }
 
     if (action.equals("prepare")) {
-
       callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
       cordova.getActivity().runOnUiThread(SumUpAPI::prepareForCheckout);
+
       return true;
     }
 
     if (action.equals("pay")) {
-
       BigDecimal amount;
       try {
         amount = new BigDecimal(args.get(0).toString());
       } catch (Exception e) {
-        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Can't parse amount"));
+        JSONObject obj = new JSONObject();
+        obj.put("code", 0);
+        obj.put("message", "Can't parse amount");
+        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+
         return false;
       }
 
@@ -99,7 +104,11 @@ public class SumUp extends CordovaPlugin {
       try {
         currency = SumUpPayment.Currency.valueOf(args.get(1).toString());
       } catch (Exception e) {
-        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Can't parse currency"));
+        JSONObject obj = new JSONObject();
+        obj.put("code", 0);
+        obj.put("message", "Can't parse currency");
+        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+
         return false;
       }
 
@@ -107,7 +116,11 @@ public class SumUp extends CordovaPlugin {
       try {
         title = args.get(2).toString();
       } catch (Exception e) {
-        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Can't parse title"));
+        JSONObject obj = new JSONObject();
+        obj.put("code", 0);
+        obj.put("message", "Can't parse title");
+        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
+
         return false;
       }
 
@@ -125,6 +138,7 @@ public class SumUp extends CordovaPlugin {
       callback = callbackContext;
       cordova.setActivityResultCallback(this);
       cordova.getActivity().runOnUiThread(runnable);
+
       return true;
     }
 
@@ -158,15 +172,16 @@ public class SumUp extends CordovaPlugin {
           JSONObject obj = new JSONObject();
           obj.put("code", 0);
           obj.put("message", "Login canceled");
-
           PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
           result.setKeepCallback(true);
           callback.sendPluginResult(result);
         }
 
       } catch (Exception e) {
-        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
-        System.out.println(e.getMessage());
+        JSONObject obj = new JSONObject();
+        obj.put("code", 0);
+        obj.put("message", e.getMessage());
+        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
       }
     }
 
@@ -221,7 +236,10 @@ public class SumUp extends CordovaPlugin {
         }
 
       } catch (Exception e) {
-        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+        JSONObject obj = new JSONObject();
+        obj.put("code", 0);
+        obj.put("message", e.getMessage());
+        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
       }
     }
 
@@ -257,7 +275,10 @@ public class SumUp extends CordovaPlugin {
         }
 
       } catch (Exception e) {
-        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+        JSONObject obj = new JSONObject();
+        obj.put("code", 0);
+        obj.put("message", e.getMessage());
+        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, obj));
       }
     }
   }
