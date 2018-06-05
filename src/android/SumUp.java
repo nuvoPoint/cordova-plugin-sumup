@@ -72,11 +72,15 @@ public class SumUp extends CordovaPlugin {
     }
 
     if (action.equals("logout")) {
+
+      callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
       cordova.getActivity().runOnUiThread(SumUpAPI::logout);
       return true;
     }
 
     if (action.equals("prepare")) {
+
+      callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
       cordova.getActivity().runOnUiThread(SumUpAPI::prepareForCheckout);
       return true;
     }
@@ -142,7 +146,7 @@ public class SumUp extends CordovaPlugin {
           obj.put("message", message);
 
           if (code == 1) {
-            PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+            PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.setKeepCallback(true);
             callback.sendPluginResult(result);
           } else {
@@ -174,10 +178,7 @@ public class SumUp extends CordovaPlugin {
           Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
           String message = extras.getString(SumUpAPI.Response.MESSAGE);
 
-
           JSONObject obj = new JSONObject();
-          obj.put("code", code);
-          obj.put("message", message);
 
           if (!extras.isEmpty()) {
             TransactionInfo txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
@@ -202,6 +203,9 @@ public class SumUp extends CordovaPlugin {
             result.setKeepCallback(true);
             callback.sendPluginResult(result);
           } else {
+            obj.put("code", code);
+            obj.put("message", message);
+
             PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
             result.setKeepCallback(true);
             callback.sendPluginResult(result);
@@ -234,7 +238,7 @@ public class SumUp extends CordovaPlugin {
           obj.put("message", message);
 
           if (code == 1) {
-            PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+            PluginResult result = new PluginResult(PluginResult.Status.OK);
             result.setKeepCallback(true);
             callback.sendPluginResult(result);
           } else {
