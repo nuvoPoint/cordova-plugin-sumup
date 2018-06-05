@@ -9,14 +9,12 @@ import org.apache.cordova.PluginResult;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
 
-import com.google.gson.Gson;
 import com.sumup.merchant.api.SumUpState;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpLogin;
 import com.sumup.merchant.api.SumUpPayment;
 import com.sumup.merchant.Models.TransactionInfo;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 
 import org.json.JSONArray;
@@ -28,7 +26,6 @@ public class SumUp extends CordovaPlugin {
   private static final int REQUEST_CODE_LOGIN = 1;
   private static final int REQUEST_CODE_PAYMENT = 2;
   private static final int REQUEST_CODE_PAYMENT_SETTINGS = 3;
-  private static final int REQUEST_CODE_LOGIN_SETTING = 4;
 
   private CallbackContext callback = null;
 
@@ -70,13 +67,11 @@ public class SumUp extends CordovaPlugin {
     if (action.equals("settings")) {
       callback = callbackContext;
       cordova.setActivityResultCallback(this);
-      cordova.getActivity().runOnUiThread(() -> SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_LOGIN_SETTING));
+      cordova.getActivity().runOnUiThread(() -> SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_PAYMENT_SETTINGS));
       return true;
     }
 
     if (action.equals("logout")) {
-      callback = callbackContext;
-      cordova.setActivityResultCallback(this);
       cordova.getActivity().runOnUiThread(SumUpAPI::logout);
       return true;
     }
@@ -137,19 +132,29 @@ public class SumUp extends CordovaPlugin {
 
     if (requestCode == REQUEST_CODE_LOGIN) {
       try {
-        Bundle extras = data.getExtras();
-        Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
-        String message = extras.getString(SumUpAPI.Response.MESSAGE);
+        if(data != null) {
+          Bundle extras = data.getExtras();
+          Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
+          String message = extras.getString(SumUpAPI.Response.MESSAGE);
 
-        JSONObject obj = new JSONObject();
-        obj.put("code", code);
-        obj.put("message", message);
+          JSONObject obj = new JSONObject();
+          obj.put("code", code);
+          obj.put("message", message);
 
-        if (code == 1) {
-          PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
-          result.setKeepCallback(true);
-          callback.sendPluginResult(result);
+          if (code == 1) {
+            PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+            result.setKeepCallback(true);
+            callback.sendPluginResult(result);
+          } else {
+            PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
+            result.setKeepCallback(true);
+            callback.sendPluginResult(result);
+          }
         } else {
+          JSONObject obj = new JSONObject();
+          obj.put("code", 0);
+          obj.put("message", "Login canceled");
+
           PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
           result.setKeepCallback(true);
           callback.sendPluginResult(result);
@@ -157,42 +162,55 @@ public class SumUp extends CordovaPlugin {
 
       } catch (Exception e) {
         callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+        System.out.println(e.getMessage());
       }
     }
 
     if (requestCode == REQUEST_CODE_PAYMENT) {
 
       try {
-        Bundle extras = data.getExtras();
-        Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
-        String message = extras.getString(SumUpAPI.Response.MESSAGE);
+        if(data != null) {
+          Bundle extras = data.getExtras();
+          Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
+          String message = extras.getString(SumUpAPI.Response.MESSAGE);
 
 
-        JSONObject obj = new JSONObject();
-        obj.put("code", code);
-        obj.put("message", message);
+          JSONObject obj = new JSONObject();
+          obj.put("code", code);
+          obj.put("message", message);
 
-        if (!extras.isEmpty()) {
-          TransactionInfo txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
+          if (!extras.isEmpty()) {
+            TransactionInfo txinfo = extras.getParcelable(SumUpAPI.Response.TX_INFO);
 
-          obj.put("transaction_code", txinfo.getTransactionCode());
-          obj.put("merchant_code", txinfo.getMerchantCode());
-          obj.put("amount", txinfo.getAmount());
-          obj.put("tip_amount", txinfo.getTipAmount());
-          obj.put("vat_amount", txinfo.getVatAmount());
-          obj.put("currency", txinfo.getCurrency());
-          obj.put("status", txinfo.getStatus());
-          obj.put("payment_type", txinfo.getPaymentType());
-          obj.put("entry_mode", txinfo.getEntryMode());
-          obj.put("installments", txinfo.getInstallments());
-          obj.put("card_type", txinfo.getCard().getType());
-        }
+            if (txinfo != null) {
+              obj.put("transaction_code", txinfo.getTransactionCode());
+              obj.put("merchant_code", txinfo.getMerchantCode());
+              obj.put("amount", txinfo.getAmount());
+              obj.put("tip_amount", txinfo.getTipAmount());
+              obj.put("vat_amount", txinfo.getVatAmount());
+              obj.put("currency", txinfo.getCurrency());
+              obj.put("status", txinfo.getStatus());
+              obj.put("payment_type", txinfo.getPaymentType());
+              obj.put("entry_mode", txinfo.getEntryMode());
+              obj.put("installments", txinfo.getInstallments());
+              obj.put("card_type", txinfo.getCard().getType());
+            }
+          }
 
-        if (code == 1) {
-          PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
-          result.setKeepCallback(true);
-          callback.sendPluginResult(result);
+          if (code == 1) {
+            PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+            result.setKeepCallback(true);
+            callback.sendPluginResult(result);
+          } else {
+            PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
+            result.setKeepCallback(true);
+            callback.sendPluginResult(result);
+          }
         } else {
+          JSONObject obj = new JSONObject();
+          obj.put("code", 0);
+          obj.put("message", "Transaction canceled");
+
           PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
           result.setKeepCallback(true);
           callback.sendPluginResult(result);
@@ -203,26 +221,32 @@ public class SumUp extends CordovaPlugin {
       }
     }
 
-    if (requestCode == REQUEST_CODE_LOGIN_SETTING) {
-      SumUpAPI.openPaymentSettingsActivity(this.cordova.getActivity(), REQUEST_CODE_PAYMENT_SETTINGS);
-    }
-
     if (requestCode == REQUEST_CODE_PAYMENT_SETTINGS) {
       try {
 
-        Bundle extras = data.getExtras();
-        Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
-        String message = extras.getString(SumUpAPI.Response.MESSAGE);
+        if(data != null) {
+          Bundle extras = data.getExtras();
+          Integer code = extras.getInt(SumUpAPI.Response.RESULT_CODE);
+          String message = extras.getString(SumUpAPI.Response.MESSAGE);
 
-        JSONObject obj = new JSONObject();
-        obj.put("code", code);
-        obj.put("message", message);
+          JSONObject obj = new JSONObject();
+          obj.put("code", code);
+          obj.put("message", message);
 
-        if (code == 1) {
-          PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
-          result.setKeepCallback(true);
-          callback.sendPluginResult(result);
+          if (code == 1) {
+            PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
+            result.setKeepCallback(true);
+            callback.sendPluginResult(result);
+          } else {
+            PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
+            result.setKeepCallback(true);
+            callback.sendPluginResult(result);
+          }
         } else {
+          JSONObject obj = new JSONObject();
+          obj.put("code", 0);
+          obj.put("message", "Settings done");
+
           PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
           result.setKeepCallback(true);
           callback.sendPluginResult(result);
