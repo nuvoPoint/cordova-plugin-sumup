@@ -1,2 +1,2 @@
 .vscode/*
-/platforms/android/.gradle
+/src/android/.gradle
