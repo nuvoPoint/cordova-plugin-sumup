@@ -135,14 +135,18 @@ public class SumUp extends CordovaPlugin {
         if (requestCode == REQUEST_CODE_LOGIN) {
             try {
                 Bundle extra = data.getExtras();
-                String code = "" + extra.getInt(SumUpAPI.Response.RESULT_CODE);
+                Int code = extra.getInt(SumUpAPI.Response.RESULT_CODE);
+                if (code === 1) {
                 String message = extra.getString(SumUpAPI.Response.MESSAGE);
 
                 JSONArray res = new JSONArray(new String[] { code, message });
                 PluginResult result = new PluginResult(PluginResult.Status.OK, res);
                 result.setKeepCallback(true);
                 callback.sendPluginResult(result);
-
+                }
+                else {
+                    callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+                }
             } catch (Exception e) {
                 callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
             }
