@@ -14,11 +14,7 @@
     <keywords>
       sumup, cordova, phonegap, cordova:ecosystem, phonegap:ecosystem
     </keywords>
-
-    <js-module src="www/sumup.js" name="sumup">
-        <clobbers target="SumUp" />
-    </js-module>
-
+    
     <!-- android -->
     <platform name="android">
         <preference name="SUMUP_API_KEY" />

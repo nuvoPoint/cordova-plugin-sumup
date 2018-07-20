@@ -2,7 +2,7 @@ declare module 'cordova-plugin-sumup' {
   export interface SumUpError {
     code: number;
     message?: string;
-  };
+  }
 
   export interface SumUpPayment {
     transaction_code: string;
