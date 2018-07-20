@@ -30,6 +30,8 @@ declare module 'cordova-plugin-sumup' {
    */
   export function login(accessToken?: string): Promise<void>;
 
+  export function auth(accessToken?: string): Promise<void>;
+
   /**
    * Logout of SumUp
    * If an error occurs, the promise is rejected with a SumUpError object.

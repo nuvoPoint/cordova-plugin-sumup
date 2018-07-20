@@ -65,6 +65,27 @@ public class SumUp extends CordovaPlugin {
       return true;
     }
 
+    if (action.equals("auth")) {
+      Runnable runnable = () -> {
+        Object accessToken = null;
+        try {
+          accessToken = args.get(0);
+        } catch (Exception e) {
+          System.out.println(e.getMessage());
+        }
+        SumUpLogin sumUpLogin;
+        if (accessToken != null) {
+          sumUpLogin = SumUpLogin.builder(affiliateKey).accessToken(accessToken.toString()).build();
+        }
+      };
+
+      callback = callbackContext;
+      cordova.setActivityResultCallback(this);
+      cordova.getActivity().runOnUiThread(runnable);
+
+      return true;
+    }
+
     if (action.equals("settings")) {
       callback = callbackContext;
       cordova.setActivityResultCallback(this);

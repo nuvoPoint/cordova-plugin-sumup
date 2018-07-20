@@ -13,6 +13,9 @@ module.exports = {
     login: function (accessToken) {
         return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'login', accessToken ? [accessToken] : []));
     },
+    auth: function (accessToken) {
+        return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'auth', accessToken ? [accessToken] : []));
+    },
     logout: function () {
         return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'logout', []));
     },
