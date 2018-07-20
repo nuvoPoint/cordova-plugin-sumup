@@ -248,7 +248,7 @@ public class SumUp extends CordovaPlugin {
             callback.sendPluginResult(result);
           }
         } else {
-          PluginResult result = new PluginResult(PluginResult.Status.OK);
+          PluginResult result = new PluginResult(PluginResult.Status.ERROR);
           result.setKeepCallback(true);
           callback.sendPluginResult(result);
         }
