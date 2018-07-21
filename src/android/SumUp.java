@@ -63,7 +63,7 @@ public class SumUp extends CordovaPlugin {
       };
 
       callback = callbackContext;
-      cordova.setActivityResultCallback(false);
+      cordova.setActivityResultCallback(true);
       cordova.getActivity().runOnUiThread(runnable);
 
       return true;
@@ -94,7 +94,7 @@ public class SumUp extends CordovaPlugin {
 
     if (action.equals("settings")) {
       callback = callbackContext;
-      cordova.setActivityResultCallback(false);
+      cordova.setActivityResultCallback(true);
       cordova.getActivity().runOnUiThread(() -> SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_PAYMENT_SETTINGS));
 
       return true;
@@ -173,7 +173,7 @@ public class SumUp extends CordovaPlugin {
       };
 
       callback = callbackContext;
-      cordova.setActivityResultCallback(false);
+      cordova.setActivityResultCallback(true);
       cordova.getActivity().runOnUiThread(runnable);
 
       return true;
@@ -198,11 +198,11 @@ public class SumUp extends CordovaPlugin {
 
           if (code == 1) {
             PluginResult result = new PluginResult(PluginResult.Status.OK);
-            result.setKeepCallback(true);
+            result.setKeepCallback(false);
             callback.sendPluginResult(result);
           } else {
             PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
-            result.setKeepCallback(true);
+            result.setKeepCallback(false);
             callback.sendPluginResult(result);
           }
         } else {
@@ -210,7 +210,7 @@ public class SumUp extends CordovaPlugin {
           obj.put("code", 0);
           obj.put("message", "Login canceled");
           PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
-          result.setKeepCallback(true);
+          result.setKeepCallback(false);
           callback.sendPluginResult(result);
         }
 
@@ -253,19 +253,19 @@ public class SumUp extends CordovaPlugin {
 
           if (code == 1) {
             PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
-            result.setKeepCallback(true);
+            result.setKeepCallback(false);
             callback.sendPluginResult(result);
           } else {
             obj.put("code", code);
             obj.put("message", message);
 
             PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
-            result.setKeepCallback(true);
+            result.setKeepCallback(false);
             callback.sendPluginResult(result);
           }
         } else {
           PluginResult result = new PluginResult(PluginResult.Status.ERROR);
-          result.setKeepCallback(true);
+          result.setKeepCallback(false);
           callback.sendPluginResult(result);
         }
 
@@ -295,11 +295,11 @@ public class SumUp extends CordovaPlugin {
 
           if (code == 1) {
             PluginResult result = new PluginResult(PluginResult.Status.OK);
-            result.setKeepCallback(true);
+            result.setKeepCallback(false);
             callback.sendPluginResult(result);
           } else {
             PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
-            result.setKeepCallback(true);
+            result.setKeepCallback(false);
             callback.sendPluginResult(result);
           }
         } else {
@@ -308,7 +308,7 @@ public class SumUp extends CordovaPlugin {
           obj.put("message", "Settings done");
 
           PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
-          result.setKeepCallback(true);
+          result.setKeepCallback(false);
           callback.sendPluginResult(result);
         }
 
