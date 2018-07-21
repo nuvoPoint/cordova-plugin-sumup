@@ -13,7 +13,10 @@ import com.sumup.merchant.api.SumUpState;
 import com.sumup.merchant.api.SumUpAPI;
 import com.sumup.merchant.api.SumUpLogin;
 import com.sumup.merchant.api.SumUpPayment;
+import com.sumup.merchant.cardreader.ReaderLibManager;
+import com.sumup.merchant.CoreState;
 import com.sumup.merchant.Models.TransactionInfo;
+import com.sumup.readerlib.CardReaderManager;
 
 import java.math.BigDecimal;
 
@@ -66,22 +69,24 @@ public class SumUp extends CordovaPlugin {
     }
 
     if (action.equals("auth")) {
-      Runnable runnable = () -> {
-        Object accessToken = null;
-        try {
-          accessToken = args.get(0);
-        } catch (Exception e) {
-          System.out.println(e.getMessage());
+      cordova.getThreadPool().execute(new Runnable() {
+        public void run() {
+          Object accessToken = null;
+          try {
+            accessToken = args.get(0);
+          } catch (Exception e) {
+            System.out.println(e.getMessage());
+          }
+          SumUpLogin sumUpLogin;
+          if (accessToken != null) {
+            sumUpLogin = SumUpLogin.builder(affiliateKey).accessToken(accessToken.toString()).build();
+          } else {
+            sumUpLogin = SumUpLogin.builder(affiliateKey).build();
+          }
+          SumUpAPI.openLoginActivity(cordova.getActivity(), sumUpLogin, REQUEST_CODE_LOGIN);
+          callbackContext.success(); // Thread-safe.
         }
-        SumUpLogin sumUpLogin;
-        if (accessToken != null) {
-          sumUpLogin = SumUpLogin.builder(affiliateKey).accessToken(accessToken.toString()).build();
-        }
-      };
-
-      callback = callbackContext;
-      cordova.setActivityResultCallback(this);
-      cordova.getActivity().runOnUiThread(runnable);
+      });
 
       return true;
     }
@@ -102,8 +107,18 @@ public class SumUp extends CordovaPlugin {
     }
 
     if (action.equals("prepare")) {
-      callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
-      cordova.getActivity().runOnUiThread(SumUpAPI::prepareForCheckout);
+
+      Handler handler = new Handler(cordova.getActivity().getMainLooper());
+      handler.post(() -> {
+
+        ReaderLibManager rlm;
+        rlm = CoreState.Instance().get(ReaderLibManager.class);
+
+
+        if(!rlm.isReadyToTransmit() && CardReaderManager.getInstance() != null) {
+          SumUpAPI.prepareForCheckout();
+        }
+      });
 
       return true;
     }
