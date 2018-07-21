@@ -63,7 +63,7 @@ public class SumUp extends CordovaPlugin {
       };
 
       callback = callbackContext;
-      cordova.setActivityResultCallback(this);
+      cordova.setActivityResultCallback(false);
       cordova.getActivity().runOnUiThread(runnable);
 
       return true;
@@ -94,7 +94,7 @@ public class SumUp extends CordovaPlugin {
 
     if (action.equals("settings")) {
       callback = callbackContext;
-      cordova.setActivityResultCallback(this);
+      cordova.setActivityResultCallback(false);
       cordova.getActivity().runOnUiThread(() -> SumUpAPI.openPaymentSettingsActivity(cordova.getActivity(), REQUEST_CODE_PAYMENT_SETTINGS));
 
       return true;
@@ -173,7 +173,7 @@ public class SumUp extends CordovaPlugin {
       };
 
       callback = callbackContext;
-      cordova.setActivityResultCallback(this);
+      cordova.setActivityResultCallback(false);
       cordova.getActivity().runOnUiThread(runnable);
 
       return true;
