@@ -20,8 +20,8 @@ module.exports = {
     settings: function () {
         return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'settings', []));
     },
-    prepare: function () {
-        return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'prepare', []));
+    prepare: function (force) {
+        return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'prepare', [force]));
     },
     pay: function (amount, currencycode, title) {
         return new Promise((resolve, reject) => cordova.exec(resolve, reject, 'SumUp', 'pay', [amount, currencycode, title]));

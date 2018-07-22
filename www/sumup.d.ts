@@ -59,7 +59,7 @@ declare module 'cordova-plugin-sumup' {
    * @export
    * @returns {Promise<void>}
    */
-  export function prepare(): Promise<void>;
+  export function prepare(force: boolean): Promise<void>;
 
   /**
    * Do a payment.

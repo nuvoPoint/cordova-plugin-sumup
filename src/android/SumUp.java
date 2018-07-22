@@ -109,6 +109,15 @@ public class SumUp extends CordovaPlugin {
 
     if (action.equals("prepare")) {
 
+      Boolean force;
+      try {
+        force = Boolean.valueOf(args.get(0).toString());
+      } catch (Exception e) {
+        System.out.println("Wrong force argument");
+
+        return false;
+      }
+
       Handler handler = new Handler(cordova.getActivity().getMainLooper());
       handler.post(() -> {
 
@@ -116,7 +125,7 @@ public class SumUp extends CordovaPlugin {
         rlm = CoreState.Instance().get(ReaderLibManager.class);
 
 
-        if(!rlm.isReadyToTransmit() && CardReaderManager.getInstance() != null) {
+        if((!rlm.isReadyToTransmit() || force ) && CardReaderManager.getInstance() != null) {
           SumUpAPI.prepareForCheckout();
         }
       });
