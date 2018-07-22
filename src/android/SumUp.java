@@ -18,6 +18,7 @@ import com.sumup.merchant.cardreader.ReaderLibManager;
 import com.sumup.merchant.CoreState;
 import com.sumup.merchant.Models.TransactionInfo;
 import com.sumup.readerlib.CardReaderManager;
+import com.sumup.merchant.Models.UserModel;
 
 import java.math.BigDecimal;
 
@@ -78,14 +79,15 @@ public class SumUp extends CordovaPlugin {
           } catch (Exception e) {
             System.out.println(e.getMessage());
           }
-          SumUpLogin sumUpLogin;
+
           if (accessToken != null) {
-            sumUpLogin = SumUpLogin.builder(affiliateKey).accessToken(accessToken.toString()).build();
+            UserModel um;
+            um = CoreState.Instance().get(UserModel.class);
+            um.setAccessToken(accessToken.toString());
+            callbackContext.success();
           } else {
-            sumUpLogin = SumUpLogin.builder(affiliateKey).build();
+            callbackContext.error("No accessToken");
           }
-          SumUpAPI.openLoginActivity(cordova.getActivity(), sumUpLogin, REQUEST_CODE_LOGIN);
-          callbackContext.success(); // Thread-safe.
         }
       });
 
@@ -109,15 +111,6 @@ public class SumUp extends CordovaPlugin {
 
     if (action.equals("prepare")) {
 
-      Boolean force;
-      try {
-        force = Boolean.valueOf(args.get(0).toString());
-      } catch (Exception e) {
-        System.out.println("Wrong force argument");
-
-        return false;
-      }
-
       Handler handler = new Handler(cordova.getActivity().getMainLooper());
       handler.post(() -> {
 
@@ -125,12 +118,8 @@ public class SumUp extends CordovaPlugin {
         rlm = CoreState.Instance().get(ReaderLibManager.class);
 
 
-        if(!rlm.isReadyToTransmit() && CardReaderManager.getInstance() != null && !force) {
+        if(!rlm.isReadyToTransmit() && CardReaderManager.getInstance() != null) {
           SumUpAPI.prepareForCheckout();
-        }
-
-        if(force && CardReaderManager.getInstance() != null) {
-          rlm.cleanAndWakePinPlusDevice();
         }
       });
 
