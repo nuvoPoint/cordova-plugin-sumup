@@ -125,8 +125,12 @@ public class SumUp extends CordovaPlugin {
         rlm = CoreState.Instance().get(ReaderLibManager.class);
 
 
-        if((!rlm.isReadyToTransmit() || force ) && CardReaderManager.getInstance() != null) {
+        if(!rlm.isReadyToTransmit() && CardReaderManager.getInstance() != null && !force) {
           SumUpAPI.prepareForCheckout();
+        }
+
+        if(force && CardReaderManager.getInstance() != null) {
+          rlm.cleanAndWakePinPlusDevice();
         }
       });
 
