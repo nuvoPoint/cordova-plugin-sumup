@@ -38,16 +38,13 @@ public class SumUp extends CordovaPlugin {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
 
-    cordova.getActivity().runOnUiThread(() -> SumUpState.init(cordova.getActivity()));
-
-    Intent i = new Intent(cordova.getActivity().getApplicationContext(), SumUpService.class);
-    cordova.getActivity().getApplicationContext().startService(i);
+    cordova.getActivity().runOnUiThread(() -> SumUpState.init(cordova.getActivity().getApplicationContext()));
   }
 
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
     String affiliateKey = this.cordova.getActivity().getString(cordova.getActivity().getResources()
-      .getIdentifier("SUMUP_API_KEY", "string", cordova.getActivity().getPackageName()));
+            .getIdentifier("SUMUP_API_KEY", "string", cordova.getActivity().getPackageName()));
 
     if (action.equals("login")) {
       Runnable runnable = () -> {
@@ -74,23 +71,21 @@ public class SumUp extends CordovaPlugin {
     }
 
     if (action.equals("auth")) {
-      cordova.getThreadPool().execute(new Runnable() {
-        public void run() {
-          Object accessToken = null;
-          try {
-            accessToken = args.get(0);
-          } catch (Exception e) {
-            System.out.println(e.getMessage());
-          }
+      cordova.getThreadPool().execute(() -> {
+        Object accessToken = null;
+        try {
+          accessToken = args.get(0);
+        } catch (Exception e) {
+          System.out.println(e.getMessage());
+        }
 
-          if (accessToken != null) {
-            UserModel um;
-            um = CoreState.Instance().get(UserModel.class);
-            um.setAccessToken(accessToken.toString());
-            callbackContext.success();
-          } else {
-            callbackContext.error("No accessToken");
-          }
+        if (accessToken != null) {
+          UserModel um;
+          um = CoreState.Instance().get(UserModel.class);
+          um.setAccessToken(accessToken.toString());
+          callbackContext.success();
+        } else {
+          callbackContext.error("No accessToken");
         }
       });
 
@@ -107,7 +102,9 @@ public class SumUp extends CordovaPlugin {
 
     if (action.equals("logout")) {
       callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
-      cordova.getActivity().runOnUiThread(SumUpAPI::logout);
+
+      Handler handler = new Handler(cordova.getActivity().getMainLooper());
+      handler.post(() -> SumUpAPI.logout());
 
       return true;
     }
@@ -119,7 +116,6 @@ public class SumUp extends CordovaPlugin {
 
         ReaderLibManager rlm;
         rlm = CoreState.Instance().get(ReaderLibManager.class);
-
 
         if(!rlm.isReadyToTransmit() && CardReaderManager.getInstance() != null) {
           SumUpAPI.prepareForCheckout();
@@ -168,11 +164,11 @@ public class SumUp extends CordovaPlugin {
 
       Runnable runnable = () -> {
         SumUpPayment payment = SumUpPayment.builder()
-          .total(amount)
-          .currency(currency)
-          .title(title)
-          .skipSuccessScreen()
-          .build();
+                .total(amount)
+                .currency(currency)
+                .title(title)
+                .skipSuccessScreen()
+                .build();
 
         SumUpAPI.checkout(cordova.getActivity(), payment, REQUEST_CODE_PAYMENT);
       };
