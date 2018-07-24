@@ -1,4 +1,4 @@
-package com.nuvopoint.cordova;
+package com.nuvopoint.cordova.sumup;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +39,9 @@ public class SumUp extends CordovaPlugin {
     super.initialize(cordova, webView);
 
     cordova.getActivity().runOnUiThread(() -> SumUpState.init(cordova.getActivity()));
+
+    Intent i = new Intent(cordova.getActivity().getApplicationContext(), SumUpService.class);
+    cordova.getActivity().getApplicationContext().startService(i);
   }
 
   @Override

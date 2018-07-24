@@ -20,17 +20,19 @@
         <preference name="SUMUP_API_KEY" />
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="SumUp" >
-                <param name="android-package" value="com.nuvopoint.cordova.SumUp" />
+                <param name="android-package" value="com.nuvopoint.cordova.sumup.SumUp" />
             </feature>
         </config-file>
         <config-file target="./res/values/strings.xml" parent="/resources">
             <string name="SUMUP_API_KEY">$SUMUP_API_KEY</string>
         </config-file>
-        <source-file src="src/android/SumUp.java" target-dir="src/com/nuvopoint/cordova" />
+        <source-file src="src/android/SumUp.java" target-dir="src/com/nuvopoint/cordova/sumup" />
+        <source-file src="src/android/SumUpService.java" target-dir="src/com/nuvopoint/cordova/sumup" />
         <config-file target="AndroidManifest.xml" parent="/*">
             <uses-permission android:name="android.permission.INTERNET" />
             <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
             <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+            <service android:name="com.nuvopoint.cordova.sumup.SumUpService" android:exported="false"/>
         </config-file>
         <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
     </platform>
