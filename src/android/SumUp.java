@@ -127,6 +127,7 @@ public class SumUp extends CordovaPlugin {
 
     if (action.equals("pay")) {
       BigDecimal amount;
+
       try {
         amount = new BigDecimal(args.get(0).toString());
       } catch (Exception e) {
@@ -162,14 +163,14 @@ public class SumUp extends CordovaPlugin {
         return false;
       }
 
-      Runnable runnable = () -> {
-        SumUpPayment payment = SumUpPayment.builder()
-                .total(amount)
-                .currency(currency)
-                .title(title)
-                .skipSuccessScreen()
-                .build();
+      SumUpPayment payment = SumUpPayment.builder()
+        .total(amount)
+        .currency(currency)
+        .title(title)
+        .skipSuccessScreen()
+        .build();
 
+      Runnable runnable = () -> {
         SumUpAPI.checkout(cordova.getActivity(), payment, REQUEST_CODE_PAYMENT);
       };
 
@@ -258,7 +259,14 @@ public class SumUp extends CordovaPlugin {
             callback.sendPluginResult(result);
           } else {
             obj.put("code", code);
-            obj.put("message", message);
+
+            UserModel um;
+            um = CoreState.Instance().get(UserModel.class);
+            if(!um.isLoggedIn()) {
+              obj.put("code", SumUpAPI.Response.ResultCode.ERROR_INVALID_TOKEN);
+            } else {
+              obj.put("code", code);
+            }
 
             PluginResult result = new PluginResult(PluginResult.Status.ERROR, obj);
             result.setKeepCallback(false);
