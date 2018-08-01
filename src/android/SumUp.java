@@ -125,6 +125,19 @@ public class SumUp extends CordovaPlugin {
       return true;
     }
 
+    if (action.equals("close")) {
+
+      Handler handler = new Handler(cordova.getActivity().getMainLooper());
+      handler.post(() -> {
+
+        if(CardReaderManager.getInstance() != null) {
+          CardReaderManager.getInstance().stopDevice();
+        }
+      });
+
+      return true;
+    }
+
     if (action.equals("pay")) {
       BigDecimal amount;
 

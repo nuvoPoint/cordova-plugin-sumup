@@ -61,6 +61,8 @@ declare module 'cordova-plugin-sumup' {
    */
   export function prepare(): Promise<void>;
 
+  export function close(): Promise<void>;
+
   /**
    * Do a payment.
    * If an error occurs, the promise is rejected with a SumUpError object.
