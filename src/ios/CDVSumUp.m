@@ -95,6 +95,16 @@
   [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+-(void) auth:(CDVInvokedUrlCommand *)command {
+  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+-(void) close:(CDVInvokedUrlCommand *)command {
+  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 -(void) pay:(CDVInvokedUrlCommand *)command {
     NSDecimal total = [(NSNumber*)[command.arguments objectAtIndex:0] decimalValue];
     NSString* currency = [command.arguments objectAtIndex:1];
