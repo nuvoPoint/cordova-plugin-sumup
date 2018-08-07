@@ -96,8 +96,41 @@
 }
 
 -(void) auth:(CDVInvokedUrlCommand *)command {
-  CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  [[NSBundle mainBundle] infoDictionary];
+  NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
+  NSString* apikey = [infoDict objectForKey:@"SUMUP_API_KEY"];
+  [SMPSumUpSDK setupWithAPIKey:apikey];
+  
+  if (command.arguments && [command.arguments count] > 0) {
+    NSString* accessToken = [command.arguments objectAtIndex:0];
+    [SMPSumUpSDK loginWithToken:accessToken completion:^(BOOL success, NSError *error) {
+      CDVPluginResult* pluginResult = nil;
+      if (success) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+      } else {
+        NSInteger errorCode = [error code];
+        NSDictionary *dict = @{
+                               @"code" : @(errorCode),
+                               @"message" : @"Login failed",
+                               };
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:dict];
+      }
+      [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+  } else {
+    [SMPSumUpSDK presentLoginFromViewController:self.viewController
+        animated:YES
+        completionBlock:^(BOOL success, NSError *error) {
+
+        CDVPluginResult* pluginResult = nil;
+        if (success) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        }
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
+  }
 }
 
 -(void) close:(CDVInvokedUrlCommand *)command {

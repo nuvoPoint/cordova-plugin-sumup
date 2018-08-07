@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
            id="cordova-plugin-sumup"
-      version="1.1.0">
+      version="1.1.1">
     <name>SumUp</name>
     <author>nuvoPoint</author>
     <description>
