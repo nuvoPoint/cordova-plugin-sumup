@@ -4,7 +4,7 @@
     "author": "nuvoPoint",
     "license": "MIT",
     "module": "./www/sumup.js",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "homepage": "https://github.com/nuvoPoint/cordova-plugin-sumup",
     "repository": {
         "type": "git",

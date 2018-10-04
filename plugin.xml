@@ -2,7 +2,7 @@
 
 <plugin xmlns="http://cordova.apache.org/ns/plugins/1.0"
            id="cordova-plugin-sumup"
-      version="1.1.1">
+      version="1.2.0">
     <name>SumUp</name>
     <author>nuvoPoint</author>
     <description>
@@ -64,6 +64,6 @@
         <header-file src="src/ios/CDVSumUp.h" />
         <source-file src="src/ios/CDVSumUp.m" />
         <preference name="SUMUP_API_KEY" />
-        <framework src="SumUpSDK" type="podspec" spec="~> 3.0.0" />
+        <framework src="SumUpSDK" type="podspec" spec="~> 3.1.0" />
     </platform>
 </plugin>
