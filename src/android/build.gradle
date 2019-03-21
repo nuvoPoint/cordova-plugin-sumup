@@ -28,7 +28,7 @@ android {
     defaultConfig {
         applicationId "com.nuvopoint.cordova.SumUp"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true
