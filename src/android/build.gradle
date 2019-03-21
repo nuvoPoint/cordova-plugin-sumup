@@ -28,7 +28,7 @@ android {
     defaultConfig {
         applicationId "com.nuvopoint.cordova.SumUp"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true
@@ -58,5 +58,5 @@ android {
 
 dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.sumup:merchant-sdk:3.1.0'
+    implementation 'com.sumup:merchant-sdk:3.1.2'
 }
