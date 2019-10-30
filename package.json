@@ -39,6 +39,6 @@
     },
     "devDependencies": {
         "cordova-paramedic": "git+https://github.com/apache/cordova-paramedic.git",
-        "eslint": "^3.18.0"
+        "eslint": "^6.6.0"
     }
 }
